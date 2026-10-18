@@ -28,13 +28,16 @@
     devShells = forAllSystems (pkgs: {
       default = pkgs.mkShell {
         # `nix develop` then `qs -p .` runs the daemon straight from the
-        # checkout. tests/isolated.sh needs libnotify, grim and dbus.
+        # checkout. The rest is for tests/: notify-send, a private bus,
+        # screenshots, virtual-pointer clicks and JSON state checks.
         packages = [
           pkgs.quickshell
           pkgs.qt6.qtdeclarative # qmllint, qmlformat, qmlls
           pkgs.libnotify
-          pkgs.grim
           pkgs.dbus
+          pkgs.grim
+          pkgs.wlrctl
+          pkgs.jq
           pkgs.alejandra
           pkgs.shellcheck
         ];
