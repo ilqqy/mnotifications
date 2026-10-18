@@ -1,0 +1,11 @@
+result
+result-*
+.direnv/
+*.qmlc
+*.jsc
+.qmlls.ini
+tests/out/
+
+# Reference images supplied for the design; not part of the project.
+/89867826d1cdd97211fd6cfed186d791.png
+/images.jpg
