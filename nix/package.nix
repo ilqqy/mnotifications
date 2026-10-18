@@ -119,6 +119,7 @@ in
 
     meta = {
       description = "macOS-style notification banners for Wayland, written in Quickshell";
+      homepage = "https://github.com/ilqqy/mnotifications";
       platforms = lib.platforms.linux;
       mainProgram = "mnotifications";
     };

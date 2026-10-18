@@ -59,7 +59,7 @@ The flake exposes `packages.<system>.default` (also `mnotifications`), a
 ```nix
 # flake.nix
 inputs.mnotifications = {
-  url = "git+file:///home/ilyanix/mNotifications";  # no remote yet
+  url = "github:ilqqy/mnotifications";
   inputs.nixpkgs.follows = "nixpkgs";
 };
 ```
