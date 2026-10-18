@@ -114,32 +114,40 @@ Singleton {
     readonly property int closeSize: 20
     // How far the close button's centre sits in from the card's corner.
     readonly property int closeInset: 5
+    readonly property int closeGlyphSize: 7
+    readonly property real glyphStroke: 1.5
 
+    readonly property string optionsLabel: "Options"
     readonly property int pillHeight: 24
     readonly property int pillPaddingX: 10
     readonly property int pillGap: 10
     readonly property int chevronSize: 8
+    readonly property int chevronGap: 5
 
     readonly property int menuMinWidth: 168
+    readonly property int menuMaxWidth: 300
     readonly property int menuPadding: 5
     readonly property int menuRowHeight: 26
     readonly property int menuRowPaddingX: 10
+    readonly property real menuClosedScale: 0.96
     // The menu tucks this far under the card and sticks out this far past
-    // the card's outer edge, as in the macOS reference.
+    // the card's right edge, as in the macOS reference.
     readonly property int menuOverlap: 6
-    readonly property int menuOverhang: 14
+    readonly property int menuOverhang: 10
 
     readonly property int stackSpacing: 8
-    readonly property int screenMarginX: 14
+    // Distance from the screen edges to the cards. The horizontal margin
+    // must stay at least menuOverhang, or the menu is cut at the screen edge.
+    readonly property int screenMarginX: 16
     readonly property int screenMarginY: 10
 
     readonly property int shadowBlur: 24
     readonly property int shadowOffsetY: 6
 
-    // Room around the cards inside the surface, for the shadow, the close
-    // button and the menu overhang.
+    // The surface spans the screen edge margin, the card, and this gutter on
+    // the inner side, which holds the shadow and the close button.
     readonly property int gutter: 28
-    readonly property int surfaceWidth: root.cardWidth + 2 * root.gutter
+    readonly property int surfaceWidth: root.screenMarginX + root.cardWidth + root.gutter
 
     // ----------------------------------------------------------- durations
 
