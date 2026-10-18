@@ -88,6 +88,7 @@ ShellRoot {
                     "height": Math.round(b.height),
                     "presence": Math.round(b.presence * 100) / 100,
                     "leaving": b.leaving,
+                    "chrome": b.chromeShown,
                     "timeout": b.timeout,
                     "countdown": b.placed && !b.leaving && b.timeout > 0
                 })),

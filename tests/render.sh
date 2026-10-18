@@ -194,8 +194,10 @@ scenario_reference() {
 	config '{"mode": "light"}'
 	shot 03-light
 	reminder=$(id_of "FaceTime Grandma")
+	check "close button and Options pill hidden without hover" equals "$(q ".banners[] | select(.id == $reminder) | .chrome")" false
 	ipc toggleMenu "$reminder" >/dev/null
 	sleep 0.4
+	check "both shown while the banner's menu is open" equals "$(q ".banners[] | select(.id == $reminder) | .chrome")" true
 	shot 04-menu-light
 	check "menu lists the four non-default actions" equals \
 		"$(q '.menuRows | join("|")')" "Mark as Completed|Remind Me in an Hour|Remind Me This Afternoon|Remind Me Tomorrow"
