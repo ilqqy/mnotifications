@@ -540,6 +540,20 @@ busctl --user call org.freedesktop.Notifications /org/freedesktop/Notifications 
 	org.freedesktop.Notifications CloseNotification u "$rid" >/dev/null
 sleep 0.5
 
+echo "== image-data icon (rounded by a shader effect)"
+bytes=()
+for ((y = 0; y < 48; y++)); do
+	for ((x = 0; x < 48; x++)); do
+		bytes+=("$((40 + x * 4))" "$((90 + y * 3))" 230 255)
+	done
+done
+busctl --user -- call org.freedesktop.Notifications /org/freedesktop/Notifications \
+	org.freedesktop.Notifications Notify 'susssasa{sv}i' \
+	Messages 0 "" "Image data hint" "48x48 RGBA square, drawn with rounded corners" 0 \
+	1 image-data '(iiibiiay)' 48 48 192 true 8 4 9216 "${bytes[@]}" -1 >/dev/null
+sleep 1
+crop 09-image-data 120
+
 echo "== reference look, light"
 # The wrapper picks the icon theme for the mode at launch, so light mode
 # gets a fresh daemon, as it would after a configuration change.

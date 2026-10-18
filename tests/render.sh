@@ -229,6 +229,18 @@ scenario_actions() {
 	check "app close removes the banner" absent "Closed by app"
 	check "app close reported as CloseRequested" logged "closed id=$appclose reason=CloseRequested"
 	clear_all
+	notify-send -A x=First -A y=Second "Menu open" "an open menu pauses the countdown" >/dev/null &
+	sleep 0.6
+	ipc toggleMenu "$(id_of 'Menu open')" >/dev/null
+	sleep 7
+	check "an open menu keeps its banner past the 6 s timeout" present "Menu open"
+	ipc toggleMenu "$(id_of 'Menu open')" >/dev/null
+	for _ in $(seq 80); do
+		absent "Menu open" && break
+		sleep 0.1
+	done
+	check "closing the menu resumes the countdown" absent "Menu open"
+	clear_all
 }
 
 scenario_icons() {
