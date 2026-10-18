@@ -5,7 +5,7 @@ import "text.js" as Format
 
 // One notification banner: a full-width row of the window holding the card.
 //
-// The window places the row (y) and starts its entrance; the banner owns
+// BannerStack hands the row its slot through moveTo(); the banner owns
 // everything else: its countdown, its actions, and its exit. Every exit,
 // whether the user closed it, it expired, an action closed it or the app
 // withdrew it, arrives as the notification's `closed` signal and runs leave().
@@ -179,6 +179,7 @@ Item {
     }
 
     onPausedChanged: {
+        Store.debugLog("paused id=" + root.key + " " + root.paused);
         if (!root.placed || root.leaving || root.timeout <= 0) return;
         if (root.paused) {
             if (countdown.running) root.remaining = Math.max(0, root.deadline - Date.now());

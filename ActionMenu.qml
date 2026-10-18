@@ -11,6 +11,8 @@ Item {
     property var entries: []
     property bool open: false
 
+    onOpenChanged: Store.debugLog("menu " + (root.open ? "open id=" + root.owner?.key : "closed"))
+
     // Labels are copied on open, so a notification closing mid-fade does not
     // blank the rows.
     function openFor(banner: Item, actions: var) {
