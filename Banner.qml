@@ -56,6 +56,9 @@ Item {
     readonly property bool menuOpen: root.menu !== null && root.menu.open && root.menu.owner === root
     readonly property bool hovered: cardHover.hovered || closeButton.hovered
     readonly property bool paused: root.hovered || root.menuOpen
+    // The close button and the Options pill appear together on hover, and
+    // stay while this banner's menu is open.
+    readonly property bool chromeShown: (root.hovered || root.menuOpen) && !root.leaving
 
     width: Theme.surfaceWidth
     height: card.height
@@ -356,7 +359,10 @@ Item {
 
             readonly property Item lastRow: bodyText.visible ? bodyText : titleText
 
-            visible: root.hasMenu
+            // Its column is reserved whenever the banner has actions, so the
+            // text does not reflow when the pill fades in on hover.
+            opacity: root.hasMenu && root.chromeShown ? 1 : 0
+            visible: opacity > 0
             anchors.right: parent.right
             anchors.rightMargin: Theme.cardPaddingX
             // Centred on the last line of text, as in the reference.
@@ -367,6 +373,10 @@ Item {
             open: root.menuOpen
             enabled: !root.leaving
             onClicked: root.toggleMenu()
+
+            Behavior on opacity {
+                NumberAnimation { duration: Theme.hoverDuration }
+            }
         }
 
         CloseButton {
@@ -374,7 +384,7 @@ Item {
 
             x: Theme.closeInset - width / 2
             y: Theme.closeInset - height / 2
-            opacity: root.hovered && !root.leaving ? 1 : 0
+            opacity: root.chromeShown ? 1 : 0
             visible: opacity > 0
             enabled: !root.leaving
             onClicked: root.dismiss()

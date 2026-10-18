@@ -51,10 +51,25 @@ in
 
     # Qt reads an icon theme only from qt6ct/KDE settings; without one it
     # resolves against hicolor alone, which has no generic icons. Follow the
-    # GTK icon theme unless QS_ICON_THEME is already set.
+    # GTK icon theme unless QS_ICON_THEME is already set, switched to its
+    # light or dark sibling to match the banners (see below).
     text = ''
+      config_home=''${XDG_CONFIG_HOME:-$HOME/.config}
+
+      # Light or dark, resolved as Config.qml does: the user's config.json,
+      # then the system one, then dark. Read once, at launch.
+      mode=dark
+      for config in "''${MNOTIFICATIONS_CONFIG:-$config_home/mnotifications/config.json}" /etc/xdg/mnotifications/config.json; do
+      	[ -r "$config" ] || continue
+      	content=$(<"$config")
+      	if [[ $content =~ \"mode\"[[:space:]]*:[[:space:]]*\"light\" ]]; then
+      		mode=light
+      		break
+      	fi
+      	[[ $content =~ \"mode\"[[:space:]]*: ]] && break
+      done
+
       if [ -z "''${QS_ICON_THEME:-}" ]; then
-      	config_home=''${XDG_CONFIG_HOME:-$HOME/.config}
       	for gtk_settings in "$config_home/gtk-3.0/settings.ini" "$config_home/gtk-4.0/settings.ini"; do
       		[ -r "$gtk_settings" ] || continue
       		while IFS='=' read -r key value; do
@@ -67,6 +82,33 @@ in
       		done <"$gtk_settings"
       		[ -n "''${QS_ICON_THEME:-}" ] && break
       	done
+
+      	# The symbolic icons of a dark theme are near-white and vanish on light
+      	# banners, and the reverse. Use the installed sibling that matches the
+      	# mode: Papirus on light, Papirus-Dark on dark (likewise breeze and
+      	# breeze-dark). A theme without such a sibling is used as it is.
+      	if [ -n "''${QS_ICON_THEME:-}" ]; then
+      		case $QS_ICON_THEME in
+      		*-[Dd]ark | *-[Ll]ight) base=''${QS_ICON_THEME%-*} ;;
+      		*) base=$QS_ICON_THEME ;;
+      		esac
+      		if [ "$mode" = light ]; then
+      			candidates=("$base" "$base-Light" "$base-light")
+      		else
+      			candidates=("$base-Dark" "$base-dark" "$base")
+      		fi
+      		IFS=: read -ra data_dirs <<<"''${XDG_DATA_HOME:-$HOME/.local/share}:''${XDG_DATA_DIRS:-/usr/local/share:/usr/share}"
+      		icon_dirs=("$HOME/.icons")
+      		for dir in "''${data_dirs[@]}"; do icon_dirs+=("$dir/icons"); done
+      		for candidate in "''${candidates[@]}"; do
+      			for dir in "''${icon_dirs[@]}"; do
+      				if [ -r "$dir/$candidate/index.theme" ]; then
+      					export QS_ICON_THEME=$candidate
+      					break 2
+      				fi
+      			done
+      		done
+      	fi
       fi
 
       # A FONTCONFIG_FILE set by the user wins; Inter is then their concern.

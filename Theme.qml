@@ -36,7 +36,7 @@ Singleton {
     readonly property int resumeMinimum: 1500
 
     // Text above the title of a critical banner (drawn in capitals).
-    readonly property string criticalLabel: "Critical"
+    readonly property string criticalLabel: "Time Sensitive"
 
     // ---------------------------------------------------------------- type
 

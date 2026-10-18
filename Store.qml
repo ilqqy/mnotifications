@@ -149,6 +149,9 @@ Singleton {
         onTriggered: root.now = Date.now()
     }
 
+    // Which icon theme the wrapper picked for the configured mode.
+    Component.onCompleted: root.log("started, icon theme " + (Quickshell.env("QS_ICON_THEME") || "(Qt default)"))
+
     NotificationServer {
         keepOnReload: true
         persistenceSupported: false
